@@ -39,13 +39,13 @@ function sc_portfolio($attr, $content = null)
         'orderby' 				=> $orderby,
         'order' 				=> $order,
         'ignore_sticky_posts'   => 1,
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'portfolio-types',
-                'field'    => 'slug',
-                'terms'    => 'links-uteis',
-            ),
-        ),
+        // 'tax_query' => array(
+        //     array(
+        //         'taxonomy' => 'portfolio-types',
+        //         'field'    => 'slug',
+        //         'terms'    => 'links-uteis',
+        //     ),
+        // ),
     );
 
     // categories
@@ -97,7 +97,7 @@ function sc_portfolio($attr, $content = null)
                             foreach ($portfolio_categories as $category) {
                                 if ($category_multi) {
                                     if (in_array($category->slug, $category_multi_array)) {
-                                        $output .= '<li class="'. esc_attr($category->slug) .' '. ($category->slug == "links-uteis" ? "current-cat" : "" ) .'"><a data-rel=".category-'. esc_attr($category->slug) .'" href="'. esc_url(get_term_link($category)) .'">'. esc_html($category->name) .'</a></li>';
+                                        $output .= '<li class="'. esc_attr($category->slug) .' '. ($category->slug == "links-uteis" ? "current-cat" : "" ) .'"><input type="hidden" value="'. esc_attr($category->slug) .'"><a data-rel=".category-'. esc_attr($category->slug) .'" href="'. esc_url(get_term_link($category)) .'">'. esc_html($category->name) .'</a></li>';
                                     }
                                 } else {
                                     $output .= '<li class="'. esc_attr($category->slug) .'"><a data-rel=".category-'. esc_attr($category->slug) .'" href="'. esc_url(get_term_link($category)) .'">'. esc_html($category->name) .'</a></li>';
@@ -130,3 +130,63 @@ function sc_portfolio($attr, $content = null)
 
     return $output;
 }
+
+function js_display_itens_by_filter()
+{
+    ?>
+    <style>
+    .hide_post {
+        position: absolute !important; left: 0px !important; top: 0px !important; display: none;
+    }
+    </style>
+    <script type="text/javascript">
+    jQuery(document).ready(function()
+    {
+        function display_itens_by_filter()
+        {
+            var currMenuToDisplay;
+
+            var filterItems = jQuery('#Filters .filters_wrapper .categories li');
+            filterItems.each(function(){
+                if (jQuery(this).hasClass('current-cat')) 
+                {
+                    currMenuToDisplay = jQuery(this).children('input').val();
+                }
+            });
+            // console.log(currMenuToDisplay);
+
+            var articlesPortfolio = jQuery('.portfolio_group li');
+            articlesPortfolio.each(function()
+            {
+                if (!jQuery(this).hasClass('category-'+currMenuToDisplay))
+                {
+                    jQuery(this).css({
+                        // 'position': 'absolute',
+                        // 'left': '0px', 
+                        // 'top': '127px',
+                        // 'display': 'none'
+                        // 'position': 'absolute',
+                        // 'left': '0px',
+                        // 'top': '0px',
+                        // 'transform': 'scale(0.001)',
+                        // 'opacity': '0',
+                        'display': 'none'
+                    });
+                    // jQuery(this).addClass('hide_post');
+                }
+                else
+                {
+                    jQuery(this).css({
+                        'top' : '0'
+                    });
+                }
+            });
+            // console.log(articles);
+        }
+        
+        display_itens_by_filter();
+    });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'js_display_itens_by_filter');
