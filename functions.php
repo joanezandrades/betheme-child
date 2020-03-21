@@ -134,58 +134,70 @@ function sc_portfolio($attr, $content = null)
 function js_display_itens_by_filter()
 {
     ?>
-    <style>
-    .hide_post {
-        position: absolute !important; left: 0px !important; top: 0px !important; display: none;
-    }
-    </style>
     <script type="text/javascript">
-    jQuery(document).ready(function()
+    function display_itens_by_filter()
     {
-        function display_itens_by_filter()
-        {
-            var currMenuToDisplay;
-
-            var filterItems = jQuery('#Filters .filters_wrapper .categories li');
-            filterItems.each(function(){
-                if (jQuery(this).hasClass('current-cat')) 
-                {
-                    currMenuToDisplay = jQuery(this).children('input').val();
-                }
-            });
-            // console.log(currMenuToDisplay);
-
-            var articlesPortfolio = jQuery('.portfolio_group li');
-            articlesPortfolio.each(function()
+        var currMenuToDisplay;
+        
+        // Coleta dos itens do menu e da menu ativo(current-cat);
+        var filterItems = jQuery('#Filters .filters_wrapper .categories li');
+        filterItems.each(function(){
+            if (jQuery(this).hasClass('current-cat')) 
             {
-                if (!jQuery(this).hasClass('category-'+currMenuToDisplay))
+                currMenuToDisplay = jQuery(this).children('input').val();
+            }
+        });
+
+        // Remover classe isotope do ul.portfolio;
+        var parentList = jQuery('ul.portfolio_group');
+        parentList.removeClass('isotope');
+
+        // Executa ao carregar a página
+        var listPortfolio = jQuery('.portfolio_group li');
+        listPortfolio.each(function()
+        {
+            if (!jQuery(this).hasClass('category-'+currMenuToDisplay))
+            {
+                jQuery(this).css({
+                    'display': 'none'
+                });
+            }
+            else
+            {
+                jQuery(this).css({
+                    'top' : '0'
+                });
+            }
+        });
+
+        // Executa ao clicar nos itens do menu
+        filterItems.click(function()
+        {
+            if (jQuery(this).hasClass('current-cat')) 
+            {
+                currMenuToDisplay = jQuery(this).children('input').val();
+            }
+
+            listPortfolio.each(function()
+            {
+
+                if (jQuery(this).hasClass('category-'+currMenuToDisplay))
                 {
                     jQuery(this).css({
-                        // 'position': 'absolute',
-                        // 'left': '0px', 
-                        // 'top': '127px',
-                        // 'display': 'none'
-                        // 'position': 'absolute',
-                        // 'left': '0px',
-                        // 'top': '0px',
-                        // 'transform': 'scale(0.001)',
-                        // 'opacity': '0',
-                        'display': 'none'
+                        'display': 'block'
                     });
-                    // jQuery(this).addClass('hide_post');
                 }
                 else
                 {
                     jQuery(this).css({
-                        'top' : '0'
+                        'display' : 'none'
                     });
                 }
             });
-            // console.log(articles);
-        }
-        
-        display_itens_by_filter();
-    });
+        });
+    }
+    
+    display_itens_by_filter();
     </script>
     <?php
 }
