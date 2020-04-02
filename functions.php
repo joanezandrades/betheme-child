@@ -202,3 +202,26 @@ function js_display_itens_by_filter()
     <?php
 }
 add_action('wp_footer', 'js_display_itens_by_filter');
+
+
+function js_link_soft_scroll()
+{
+    ?>
+    <script type="text/javascript">
+    function link_soft_scroll()
+    {
+        jQuery('a[href^="#"]').on('click', function(e) {
+            e.preventDefault();
+            var id = jQuery(this).attr('href'),
+                    targetOffset = jQuery(id).offset().top;
+                    
+            jQuery('html, body').animate({ 
+                scrollTop: targetOffset - 200
+            }, 500);
+        });
+    }
+    link_soft_scroll();
+    </script>
+    <?php
+}
+add_action('wp_footer', 'js_link_soft_scroll');
